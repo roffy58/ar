@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { AuthService } from "@/lib/auth";
 import { apiRequest } from "@/lib/queryClient";
@@ -46,6 +49,9 @@ interface Dish {
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newRestaurant, setNewRestaurant] = useState({ name: "", description: "", cuisine: "", image: "" });
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -98,6 +104,30 @@ export default function AdminDashboard() {
       toast({
         title: "Update failed",
         description: error.message || "Failed to update restaurant status",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Add restaurant mutation
+  const addRestaurantMutation = useMutation({
+    mutationFn: async (restaurantData: any) => {
+      const response = await apiRequest('POST', '/api/restaurants', restaurantData);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/restaurants'] });
+      setShowAddModal(false);
+      setNewRestaurant({ name: "", description: "", cuisine: "", image: "" });
+      toast({
+        title: "Restaurant added",
+        description: "New restaurant has been added successfully.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to add restaurant",
+        description: error.message || "Failed to add new restaurant",
         variant: "destructive",
       });
     },
@@ -163,23 +193,63 @@ export default function AdminDashboard() {
           
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2">
-            <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-primary bg-primary/10 rounded-lg" data-testid="nav-dashboard">
+            <button 
+              onClick={() => setActiveTab("dashboard")}
+              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                activeTab === "dashboard" 
+                  ? "text-primary bg-primary/10" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`} 
+              data-testid="nav-dashboard"
+            >
               <BarChart3 className="w-4 h-4 mr-3" />
               Dashboard
             </button>
-            <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors" data-testid="nav-restaurants">
+            <button 
+              onClick={() => setActiveTab("restaurants")}
+              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                activeTab === "restaurants" 
+                  ? "text-primary bg-primary/10" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`} 
+              data-testid="nav-restaurants"
+            >
               <Store className="w-4 h-4 mr-3" />
               Restaurants
             </button>
-            <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors" data-testid="nav-dishes">
+            <button 
+              onClick={() => setActiveTab("dishes")}
+              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                activeTab === "dishes" 
+                  ? "text-primary bg-primary/10" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`} 
+              data-testid="nav-dishes"
+            >
               <Utensils className="w-4 h-4 mr-3" />
               Dishes
             </button>
-            <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors" data-testid="nav-qrcodes">
+            <button 
+              onClick={() => setActiveTab("qrcodes")}
+              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                activeTab === "qrcodes" 
+                  ? "text-primary bg-primary/10" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`} 
+              data-testid="nav-qrcodes"
+            >
               <QrCode className="w-4 h-4 mr-3" />
               QR Codes
             </button>
-            <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors" data-testid="nav-owners">
+            <button 
+              onClick={() => setActiveTab("owners")}
+              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                activeTab === "owners" 
+                  ? "text-primary bg-primary/10" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`} 
+              data-testid="nav-owners"
+            >
               <Users className="w-4 h-4 mr-3" />
               Owners
             </button>
@@ -216,24 +286,105 @@ export default function AdminDashboard() {
         <header className="bg-card border-b border-border px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground font-serif">Dashboard</h1>
-              <p className="text-muted-foreground">Manage your restaurant network</p>
+              <h1 className="text-2xl font-bold text-foreground font-serif">
+                {activeTab === "dashboard" ? "Dashboard" :
+                 activeTab === "restaurants" ? "Restaurants" :
+                 activeTab === "dishes" ? "Dishes" :
+                 activeTab === "qrcodes" ? "QR Codes" :
+                 activeTab === "owners" ? "Owners" : "Dashboard"}
+              </h1>
+              <p className="text-muted-foreground">
+                {activeTab === "dashboard" ? "Manage your restaurant network" :
+                 activeTab === "restaurants" ? "Manage all restaurants" :
+                 activeTab === "dishes" ? "Manage all dishes" :
+                 activeTab === "qrcodes" ? "Generate QR codes" :
+                 activeTab === "owners" ? "Manage restaurant owners" : "Manage your restaurant network"}
+              </p>
             </div>
             <div className="flex items-center space-x-4">
               <button className="relative p-2 text-muted-foreground hover:text-foreground transition-colors" data-testid="button-notifications">
                 <Bell className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">3</span>
               </button>
-              <Button className="bg-primary text-primary-foreground hover:bg-primary/90" data-testid="button-add-restaurant">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Restaurant
-              </Button>
+              {activeTab === "restaurants" && (
+                <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90" data-testid="button-add-restaurant">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Restaurant
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Add New Restaurant</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="text-right">Name</Label>
+                        <Input
+                          id="name"
+                          value={newRestaurant.name}
+                          onChange={(e) => setNewRestaurant(prev => ({ ...prev, name: e.target.value }))}
+                          className="col-span-3"
+                          placeholder="Restaurant name"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="cuisine" className="text-right">Cuisine</Label>
+                        <Input
+                          id="cuisine"
+                          value={newRestaurant.cuisine}
+                          onChange={(e) => setNewRestaurant(prev => ({ ...prev, cuisine: e.target.value }))}
+                          className="col-span-3"
+                          placeholder="Italian, Chinese, etc."
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="image" className="text-right">Image URL</Label>
+                        <Input
+                          id="image"
+                          value={newRestaurant.image}
+                          onChange={(e) => setNewRestaurant(prev => ({ ...prev, image: e.target.value }))}
+                          className="col-span-3"
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-start gap-4">
+                        <Label htmlFor="description" className="text-right pt-2">Description</Label>
+                        <Textarea
+                          id="description"
+                          value={newRestaurant.description}
+                          onChange={(e) => setNewRestaurant(prev => ({ ...prev, description: e.target.value }))}
+                          className="col-span-3"
+                          placeholder="Restaurant description"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowAddModal(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => addRestaurantMutation.mutate(newRestaurant)}
+                        disabled={!newRestaurant.name.trim() || addRestaurantMutation.isPending}
+                      >
+                        {addRestaurantMutation.isPending ? "Adding..." : "Add Restaurant"}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           </div>
         </header>
 
         {/* Dashboard Content */}
         <main className="p-6">
+          {activeTab === "dashboard" && (
+            <>
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card data-testid="stats-restaurants">
@@ -309,7 +460,11 @@ export default function AdminDashboard() {
             </Card>
           </div>
 
+          </>
+          )}
+
           {/* Restaurants Table */}
+          {activeTab === "restaurants" && (
           <Card>
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
@@ -325,7 +480,12 @@ export default function AdminDashboard() {
                       data-testid="input-search-restaurants"
                     />
                   </div>
-                  <Button size="sm" className="bg-primary text-primary-foreground" data-testid="button-add-restaurant-table">
+                  <Button 
+                    size="sm" 
+                    className="bg-primary text-primary-foreground" 
+                    onClick={() => setShowAddModal(true)}
+                    data-testid="button-add-restaurant-table"
+                  >
                     <Plus className="w-4 h-4 mr-2" />
                     Add New
                   </Button>
@@ -445,6 +605,41 @@ export default function AdminDashboard() {
               )}
             </CardContent>
           </Card>
+          )}
+
+          {/* Other tabs content */}
+          {activeTab === "dishes" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Dishes Management</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Dishes management coming soon...</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {activeTab === "qrcodes" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>QR Code Management</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">QR code management coming soon...</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {activeTab === "owners" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Restaurant Owners</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Owner management coming soon...</p>
+              </CardContent>
+            </Card>
+          )}
         </main>
       </div>
     </div>
