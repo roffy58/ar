@@ -607,36 +607,207 @@ export default function AdminDashboard() {
           </Card>
           )}
 
-          {/* Other tabs content */}
+          {/* Dishes Management */}
           {activeTab === "dishes" && (
             <Card>
-              <CardHeader>
-                <CardTitle>Dishes Management</CardTitle>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg font-semibold">All Dishes</CardTitle>
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        placeholder="Search dishes..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-9 w-64"
+                        data-testid="input-search-dishes"
+                      />
+                    </div>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">Dishes management coming soon...</p>
+                {dishes.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-8">
+                    <Utensils className="w-12 h-12 text-muted-foreground mb-4" />
+                    <p className="text-muted-foreground">No dishes available yet</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {dishes
+                      .filter((dish: Dish) => 
+                        dish.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        dish.description?.toLowerCase().includes(searchTerm.toLowerCase())
+                      )
+                      .map((dish: Dish) => (
+                        <Card key={dish.id} className="overflow-hidden">
+                          <div className="aspect-video bg-muted relative">
+                            {dish.image ? (
+                              <img 
+                                src={dish.image} 
+                                alt={dish.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Utensils className="w-12 h-12 text-muted-foreground" />
+                              </div>
+                            )}
+                          </div>
+                          <CardContent className="p-4">
+                            <div className="flex justify-between items-start mb-2">
+                              <h3 className="font-semibold text-foreground">{dish.name}</h3>
+                              <Badge variant={dish.isAvailable ? "default" : "secondary"}>
+                                {dish.isAvailable ? "Available" : "Unavailable"}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                              {dish.description}
+                            </p>
+                            <div className="flex justify-between items-center">
+                              <span className="text-lg font-bold text-primary">${dish.price}</span>
+                              <div className="flex space-x-2">
+                                <Button variant="ghost" size="sm">
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm">
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))
+                    }
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
 
+          {/* QR Codes Management */}
           {activeTab === "qrcodes" && (
             <Card>
-              <CardHeader>
-                <CardTitle>QR Code Management</CardTitle>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg font-semibold">QR Codes</CardTitle>
+                  <p className="text-sm text-muted-foreground">Generate and manage restaurant QR codes</p>
+                </div>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">QR code management coming soon...</p>
+                {restaurants.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-8">
+                    <QrCode className="w-12 h-12 text-muted-foreground mb-4" />
+                    <p className="text-muted-foreground">No restaurants to generate QR codes for</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {restaurants.map((restaurant: Restaurant) => (
+                      <Card key={restaurant.id} className="overflow-hidden">
+                        <CardContent className="p-6">
+                          <div className="flex items-center space-x-4 mb-4">
+                            <img 
+                              src={restaurant.image || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=60&h=60"} 
+                              alt={restaurant.name}
+                              className="w-12 h-12 rounded-lg object-cover"
+                            />
+                            <div>
+                              <h3 className="font-semibold text-foreground">{restaurant.name}</h3>
+                              <p className="text-sm text-muted-foreground">{restaurant.cuisine}</p>
+                            </div>
+                          </div>
+                          <div className="text-center mb-4">
+                            <div className="w-32 h-32 mx-auto bg-muted rounded-lg flex items-center justify-center mb-3">
+                              <QrCode className="w-16 h-16 text-muted-foreground" />
+                            </div>
+                            <p className="text-xs text-muted-foreground mb-3">
+                              Scan to view {restaurant.name} menu
+                            </p>
+                          </div>
+                          <div className="space-y-2">
+                            <Button 
+                              variant="outline" 
+                              className="w-full"
+                              onClick={() => generateQRCode(restaurant.id)}
+                            >
+                              <QrCode className="w-4 h-4 mr-2" />
+                              Generate QR Code
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              className="w-full text-xs"
+                              onClick={() => {
+                                const menuUrl = `${window.location.origin}/menu/${restaurant.id}`;
+                                navigator.clipboard.writeText(menuUrl);
+                                toast({ title: "Menu URL copied to clipboard!" });
+                              }}
+                            >
+                              Copy Menu URL
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
 
+          {/* Restaurant Owners Management */}
           {activeTab === "owners" && (
             <Card>
-              <CardHeader>
-                <CardTitle>Restaurant Owners</CardTitle>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg font-semibold">Restaurant Owners</CardTitle>
+                  <p className="text-sm text-muted-foreground">Manage restaurant owner accounts</p>
+                </div>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">Owner management coming soon...</p>
+                <div className="space-y-4">
+                  {/* Sample owner data - in a real app this would come from API */}
+                  <div className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+                          <Users className="w-6 h-6 text-primary-foreground" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground">Marco Rossi</h3>
+                          <p className="text-sm text-muted-foreground">marco.rossi@example.com</p>
+                          <p className="text-xs text-muted-foreground">Owner of Bella Vista</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="default" className="bg-chart-2 text-white">
+                          Active
+                        </Badge>
+                        <Button variant="ghost" size="sm">
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="border rounded-lg p-4 opacity-60">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
+                          <Users className="w-6 h-6 text-muted-foreground" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground">Create New Owner</h3>
+                          <p className="text-sm text-muted-foreground">Add a new restaurant owner account</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Owner
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           )}
