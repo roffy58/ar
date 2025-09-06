@@ -373,7 +373,7 @@ export default function CustomerMenu() {
               {currentDishIndex + 1} of {dishes.length}
             </span>
             <div className="flex space-x-1">
-              {dishes.map((_, index) => (
+              {dishes.map((_: any, index: number) => (
                 <button
                   key={index}
                   onClick={() => setCurrentDishIndex(index)}
@@ -387,7 +387,7 @@ export default function CustomerMenu() {
         
         {/* Dish Slider */}
         <div className="flex space-x-4 overflow-x-auto pb-2">
-          {dishes.map((dish, index) => (
+          {dishes.map((dish: Dish, index: number) => (
             <button
               key={dish.id}
               onClick={() => setCurrentDishIndex(index)}
@@ -451,7 +451,7 @@ export default function CustomerMenu() {
               <div className="mb-6">
                 <h3 className="font-semibold text-foreground mb-2">Ingredients</h3>
                 <div className="flex flex-wrap gap-2">
-                  {currentDish.ingredients.map((ingredient, index) => (
+                  {currentDish.ingredients.map((ingredient: string, index: number) => (
                     <Badge key={index} variant="secondary" className="bg-muted text-muted-foreground" data-testid={`ingredient-${index}`}>
                       {ingredient}
                     </Badge>

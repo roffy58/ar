@@ -56,7 +56,7 @@ export class MemStorage implements IStorage {
       password: hashedPassword,
       email: "admin@example.com",
       role: "super_admin",
-      restaurantId: null,
+      restaurantId: null as string | null,
       createdAt: new Date(),
     };
     this.users.set(superAdmin.id, superAdmin);
@@ -70,7 +70,7 @@ export class MemStorage implements IStorage {
       image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
       isEnabled: true,
       qrCode: `bella-vista-${randomUUID()}`,
-      ownerId: null,
+      ownerId: null as string | null,
       createdAt: new Date(),
     };
     this.restaurants.set(restaurant.id, restaurant);
@@ -140,9 +140,12 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const hashedPassword = await bcrypt.hash(insertUser.password, 10);
     const user: User = {
-      ...insertUser,
       id,
+      username: insertUser.username,
       password: hashedPassword,
+      email: insertUser.email,
+      role: insertUser.role,
+      restaurantId: insertUser.restaurantId ?? null,
       createdAt: new Date(),
     };
     this.users.set(id, user);
@@ -161,9 +164,14 @@ export class MemStorage implements IStorage {
   async createRestaurant(insertRestaurant: InsertRestaurant): Promise<Restaurant> {
     const id = randomUUID();
     const restaurant: Restaurant = {
-      ...insertRestaurant,
       id,
+      name: insertRestaurant.name,
+      description: insertRestaurant.description ?? null,
+      cuisine: insertRestaurant.cuisine ?? null,
+      image: insertRestaurant.image ?? null,
+      isEnabled: insertRestaurant.isEnabled ?? true,
       qrCode: `${insertRestaurant.name.toLowerCase().replace(/\s+/g, '-')}-${randomUUID()}`,
+      ownerId: insertRestaurant.ownerId ?? null,
       createdAt: new Date(),
     };
     this.restaurants.set(id, restaurant);
@@ -199,8 +207,16 @@ export class MemStorage implements IStorage {
   async createDish(insertDish: InsertDish): Promise<Dish> {
     const id = randomUUID();
     const dish: Dish = {
-      ...insertDish,
       id,
+      name: insertDish.name,
+      description: insertDish.description ?? null,
+      price: insertDish.price,
+      image: insertDish.image ?? null,
+      glbModel: insertDish.glbModel ?? null,
+      usdzModel: insertDish.usdzModel ?? null,
+      ingredients: insertDish.ingredients ?? null,
+      restaurantId: insertDish.restaurantId,
+      isAvailable: insertDish.isAvailable ?? true,
       createdAt: new Date(),
     };
     this.dishes.set(id, dish);
@@ -236,8 +252,13 @@ export class MemStorage implements IStorage {
   async createOrder(insertOrder: InsertOrder): Promise<Order> {
     const id = randomUUID();
     const order: Order = {
-      ...insertOrder,
       id,
+      restaurantId: insertOrder.restaurantId,
+      tableNumber: insertOrder.tableNumber,
+      items: insertOrder.items ?? null,
+      totalAmount: insertOrder.totalAmount,
+      status: insertOrder.status ?? "pending",
+      specialInstructions: insertOrder.specialInstructions ?? null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
