@@ -57,7 +57,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const data = JSON.parse(message.toString());
         
         if (data.type === 'subscribe' && data.restaurantId) {
-          restaurantId = data.restaurantId;
+          restaurantId = data.restaurantId as string;
           
           if (!restaurantClients.has(restaurantId)) {
             restaurantClients.set(restaurantId, new Set());
