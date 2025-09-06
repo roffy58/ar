@@ -1,0 +1,63 @@
+You are an expert full-stack developer.  
+Generate a complete web application with the following features:  
+
+### Tech Stack
+- **Frontend:** React + Vite + TailwindCSS + shadcn/ui + model-viewer (for 3D/AR) + Three.js (for fallback AR mode).
+- **Backend:** Node.js + Express + Socket.IO for real-time notifications.
+- **Database:** MongoDB (use mongoose for schema).
+- **Auth:** Simple JWT-based authentication.
+- **Deployment:** Should be structured so frontend and backend can be deployed separately (Netlify + Render style).
+
+---
+
+### Core Requirements
+
+1. **Super Admin Panel (full control)**
+   - Login for super admin only.
+   - Can add/edit/delete restaurants.
+   - Can enable/disable any restaurant (toggle).
+   - Can add/edit/delete dishes (with fields: name, description, price, image, GLB model, USDZ model).
+   - Can assign dishes to any restaurant.
+   - Generate unique QR codes for each restaurant that links to customer menu page.
+   - Dashboard to see all restaurants and their status.
+
+2. **Restaurant Owner Panel**
+   - Login for restaurant owner (credentials provided by super admin).
+   - Owner **cannot edit menu**.
+   - Owner only sees **live orders** with:
+     - Table number
+     - Dish list
+     - Status (Pending/Accepted/Rejected)
+   - Accept / Reject order buttons.
+   - Orders update in real-time via Socket.IO.
+
+3. **Customer Flow (via QR code)**
+   - When QR is scanned → Open restaurant’s menu page.
+   - Menu shows all dishes (3D/AR viewer):
+     - `<model-viewer>` to load dish.glb for Android, dish.usdz for iOS.
+     - If AR not supported, fallback = Three.js overlay on camera (pseudo-AR).
+   - Slider/next-prev navigation for dishes.
+   - Customer selects dish, quantity, and enters table number → places order.
+   - Order instantly sent to that restaurant’s owner panel (via backend Socket.IO).
+
+4. **Backend APIs**
+   - `/api/auth` → login/signup (for admin & owner).
+   - `/api/restaurants` → CRUD for restaurants (admin only).
+   - `/api/dishes` → CRUD for dishes (admin only).
+   - `/api/orders` → create order (customer), update status (owner).
+   - Socket.IO channel for order notifications.
+
+5. **Frontend Pages**
+   - `/admin` → Super Admin Panel (React + Tailwind + shadcn/ui dashboard).
+   - `/owner` → Restaurant Owner Panel (live order feed).
+   - `/menu/:restaurantId` → Customer AR Menu (3D/AR viewer + order form).
+
+---
+
+### Notes
+- Use clean code structure (frontend in `/client`, backend in `/server`).
+- Include seed data for 1 super admin account, 1 restaurant, and 2 dishes (with sample GLB + USDZ links).
+- Make sure `<model-viewer>` is properly set up with AR button support for Android & iOS.
+- Add camera background + Three.js cube as example fallback AR (for unsupported devices).
+
+Generate all code files with explanations in comments.
