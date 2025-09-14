@@ -1,0 +1,907 @@
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Restaurant Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    popover: {
+                        DEFAULT: "var(--popover)",
+                        foreground: "var(--popover-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                    chart: {
+                        "1": "var(--chart-1)",
+                        "2": "var(--chart-2)",
+                        "3": "var(--chart-3)",
+                        "4": "var(--chart-4)",
+                        "5": "var(--chart-5)",
+                    }
+                },
+                fontFamily: {
+                    sans: ["var(--font-sans)"],
+                    serif: ["var(--font-serif)"],
+                    mono: ["var(--font-mono)"],
+                }
+            },
+        }
+    };
+    </script>
+    <style>
+        :root {
+            --card: hsl(47.14, 87.5%, 96.86%);
+            --ring: hsl(39.27, 43.31%, 24.9%);
+            --input: hsl(44.21, 26.76%, 86.08%);
+            --muted: hsl(38.4, 60.98%, 91.96%);
+            --accent: hsl(74.4, 39.68%, 87.65%);
+            --border: hsl(44.21, 26.76%, 86.08%);
+            --radius: 0.875rem;
+            --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --chart-1: hsl(203.8863 88.2845% 53.1373%);
+            --chart-2: hsl(159.7826 100% 36.0784%);
+            --chart-3: hsl(42.0290 92.8251% 56.2745%);
+            --chart-4: hsl(147.1429 78.5047% 41.9608%);
+            --chart-5: hsl(341.4894 75.2000% 50.9804%);
+            --popover: hsl(0 0% 100%);
+            --primary: hsl(38.23, 87.6%, 74.71%);
+            --sidebar: hsl(180 6.6667% 97.0588%);
+            --spacing: 0.25rem;
+            --font-mono: 'Space Grotesk', sans-serif;
+            --font-sans: 'Lora', serif;
+            --secondary: hsl(39.27, 43.31%, 24.9%);
+            --shadow-lg: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-md: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --background: hsl(45, 100%, 96.86%);
+            --font-serif: 'Geist', sans-serif;
+            --foreground: hsl(38.18, 53.23%, 24.31%);
+            --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --destructive: hsl(0.49, 54.19%, 55.49%);
+            --sidebar-ring: hsl(202.8169 89.1213% 53.1373%);
+            --sidebar-accent: hsl(211.5789 51.3514% 92.7451%);
+            --sidebar-border: hsl(205.0000 25.0000% 90.5882%);
+            --card-foreground: hsl(210 25% 7.8431%);
+            --sidebar-primary: hsl(203.8863 88.2845% 53.1373%);
+            --tracking-normal: 0em;
+            --muted-foreground: hsl(38.18, 53.23%, 24.31%);
+            --accent-foreground: hsl(91.43, 10.55%, 39.02%);
+            --popover-foreground: hsl(210 25% 7.8431%);
+            --primary-foreground: hsl(39.27, 43.31%, 24.9%);
+            --sidebar-foreground: hsl(210 25% 7.8431%);
+            --secondary-foreground: hsl(39.75, 86.96%, 81.96%);
+            --destructive-foreground: hsl(0 0% 100%);
+            --sidebar-accent-foreground: hsl(203.8863 88.2845% 53.1373%);
+            --sidebar-primary-foreground: hsl(0 0% 100%);
+        }
+
+        .dark {
+            --card: hsl(228 9.8039% 10%);
+            --ring: hsl(202.8169 89.1213% 53.1373%);
+            --input: hsl(207.6923 27.6596% 18.4314%);
+            --muted: hsl(0 0% 9.4118%);
+            --accent: hsl(205.7143 70% 7.8431%);
+            --border: hsl(210 5.2632% 14.9020%);
+            --radius: 1.3rem;
+            --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --chart-1: hsl(203.8863 88.2845% 53.1373%);
+            --chart-2: hsl(159.7826 100% 36.0784%);
+            --chart-3: hsl(42.0290 92.8251% 56.2745%);
+            --chart-4: hsl(147.1429 78.5047% 41.9608%);
+            --chart-5: hsl(341.4894 75.2000% 50.9804%);
+            --popover: hsl(0 0% 0%);
+            --primary: hsl(203.7736 87.6033% 52.5490%);
+            --sidebar: hsl(228 9.8039% 10%);
+            --spacing: 0.25rem;
+            --font-mono: Menlo, monospace;
+            --font-sans: Open Sans, sans-serif;
+            --secondary: hsl(195.0000 15.3846% 94.9020%);
+            --shadow-lg: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-md: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --background: hsl(0 0% 0%);
+            --font-serif: Georgia, serif;
+            --foreground: hsl(200 6.6667% 91.1765%);
+            --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --destructive: hsl(356.3033 90.5579% 54.3137%);
+            --sidebar-ring: hsl(202.8169 89.1213% 53.1373%);
+            --sidebar-accent: hsl(205.7143 70% 7.8431%);
+            --sidebar-border: hsl(205.7143 15.7895% 26.0784%);
+            --card-foreground: hsl(0 0% 85.0980%);
+            --sidebar-primary: hsl(202.8169 89.1213% 53.1373%);
+            --tracking-normal: 0em;
+            --muted-foreground: hsl(210 3.3898% 46.2745%);
+            --accent-foreground: hsl(203.7736 87.6033% 52.5490%);
+            --popover-foreground: hsl(200 6.6667% 91.1765%);
+            --primary-foreground: hsl(0 0% 100%);
+            --sidebar-foreground: hsl(0 0% 85.0980%);
+            --secondary-foreground: hsl(210 25% 7.8431%);
+            --destructive-foreground: hsl(0 0% 100%);
+            --sidebar-accent-foreground: hsl(203.7736 87.6033% 52.5490%);
+            --sidebar-primary-foreground: hsl(0 0% 100%);
+        }
+
+        .navbar-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .ar-viewer-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ar-viewer-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="h-full bg-background font-sans antialiased">
+    <!-- Navigation Toggle -->
+    <div class="fixed top-4 right-4 z-50">
+        <select id="viewSelector" class="bg-card border border-border rounded-lg px-4 py-2 text-foreground font-medium shadow-md">
+            <option value="admin">Super Admin Panel</option>
+            <option value="owner">Restaurant Owner Panel</option>
+            <option value="customer">Customer AR Menu</option>
+        </select>
+    </div>
+
+    <!-- @COMPONENT: SuperAdminPanel -->
+    <div id="adminView" class="view-panel min-h-screen">
+        <!-- Sidebar -->
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out">
+            <div class="flex flex-col h-full">
+                <!-- Logo -->
+                <div class="flex items-center justify-center h-16 px-4 border-b border-border">
+                    <h1 class="text-xl font-bold text-foreground font-serif">AR Restaurant</h1>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="flex-1 p-4 space-y-2">
+                    <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-primary bg-primary/10 rounded-lg">
+                        <i class="fas fa-chart-bar mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                        <i class="fas fa-store mr-3"></i>
+                        Restaurants
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                        <i class="fas fa-utensils mr-3"></i>
+                        Dishes
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                        <i class="fas fa-qrcode mr-3"></i>
+                        QR Codes
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                        <i class="fas fa-users mr-3"></i>
+                        Owners
+                    </a>
+                </nav>
+                
+                <!-- User Menu -->
+                <div class="p-4 border-t border-border">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-primary-foreground text-sm"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-foreground">Super Admin</p>
+                            <p class="text-xs text-muted-foreground">admin@example.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64">
+            <!-- Top Bar -->
+            <header class="bg-card border-b border-border px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-foreground font-serif">Dashboard</h1>
+                        <p class="text-muted-foreground">Manage your restaurant network</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="relative p-2 text-muted-foreground hover:text-foreground transition-colors">
+                            <i class="fas fa-bell text-lg"></i>
+                            <span class="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">3</span>
+                        </button>
+                        <button class="bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>
+                            Add Restaurant
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="p-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-card border border-border rounded-lg p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-muted-foreground text-sm font-medium">Total Restaurants</p>
+                                <p class="text-3xl font-bold text-foreground">24</p>
+                            </div>
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-store text-primary text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-4 text-sm">
+                            <span class="text-accent-foreground">+12%</span>
+                            <span class="text-muted-foreground ml-2">from last month</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-card border border-border rounded-lg p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-muted-foreground text-sm font-medium">Active Dishes</p>
+                                <p class="text-3xl font-bold text-foreground">156</p>
+                            </div>
+                            <div class="w-12 h-12 bg-chart-2/10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-utensils text-chart-2 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-4 text-sm">
+                            <span class="text-accent-foreground">+8%</span>
+                            <span class="text-muted-foreground ml-2">from last month</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-card border border-border rounded-lg p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-muted-foreground text-sm font-medium">Daily Orders</p>
+                                <p class="text-3xl font-bold text-foreground">1,247</p>
+                            </div>
+                            <div class="w-12 h-12 bg-chart-3/10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-receipt text-chart-3 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-4 text-sm">
+                            <span class="text-accent-foreground">+23%</span>
+                            <span class="text-muted-foreground ml-2">from yesterday</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-card border border-border rounded-lg p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-muted-foreground text-sm font-medium">Revenue</p>
+                                <p class="text-3xl font-bold text-foreground">$24,780</p>
+                            </div>
+                            <div class="w-12 h-12 bg-chart-4/10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-dollar-sign text-chart-4 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-4 text-sm">
+                            <span class="text-accent-foreground">+15%</span>
+                            <span class="text-muted-foreground ml-2">from last week</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurants Table -->
+                <div class="bg-card border border-border rounded-lg">
+                    <div class="px-6 py-4 border-b border-border">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-foreground">Restaurants</h2>
+                            <div class="flex items-center space-x-3">
+                                <input type="text" placeholder="Search restaurants..." class="bg-input border border-border rounded-lg px-3 py-2 text-sm" />
+                                <button class="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium">
+                                    <i class="fas fa-plus mr-2"></i>Add New
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-muted">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Restaurant</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Owner</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Dishes</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">QR Code</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-border">
+                                <tr class="hover:bg-muted/50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <!-- Restaurant logo placeholder -->
+                                            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" alt="Bella Vista restaurant interior" class="w-10 h-10 rounded-lg object-cover" />
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-foreground">Bella Vista</div>
+                                                <div class="text-sm text-muted-foreground">Italian Cuisine</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-foreground">Marco Rossi</div>
+                                        <div class="text-sm text-muted-foreground">marco@bellavista.com</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground">12</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-medium bg-accent text-accent-foreground rounded-full">Active</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <button class="text-primary hover:text-primary/80 text-sm font-medium">
+                                            <i class="fas fa-qrcode mr-1"></i>View
+                                        </button>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <div class="flex items-center space-x-2">
+                                            <button class="text-primary hover:text-primary/80">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-muted-foreground hover:text-foreground">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="text-destructive hover:text-destructive/80">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-muted/50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <!-- Sushi restaurant atmosphere -->
+                                            <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" alt="Sakura Sushi restaurant with traditional Japanese design" class="w-10 h-10 rounded-lg object-cover" />
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-foreground">Sakura Sushi</div>
+                                                <div class="text-sm text-muted-foreground">Japanese Cuisine</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-foreground">Takeshi Yamamoto</div>
+                                        <div class="text-sm text-muted-foreground">takeshi@sakura.com</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground">18</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-medium bg-accent text-accent-foreground rounded-full">Active</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <button class="text-primary hover:text-primary/80 text-sm font-medium">
+                                            <i class="fas fa-qrcode mr-1"></i>View
+                                        </button>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <div class="flex items-center space-x-2">
+                                            <button class="text-primary hover:text-primary/80">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-muted-foreground hover:text-foreground">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="text-destructive hover:text-destructive/80">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: SuperAdminPanel -->
+
+    <!-- @COMPONENT: RestaurantOwnerPanel -->
+    <div id="ownerView" class="view-panel min-h-screen hidden">
+        <!-- Header -->
+        <header class="bg-card border-b border-border px-6 py-4 navbar-blur sticky top-0 z-40">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <!-- Restaurant logo -->
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=60&h=60" alt="Bella Vista restaurant logo" class="w-12 h-12 rounded-lg object-cover" />
+                    <div>
+                        <h1 class="text-xl font-bold text-foreground font-serif">Bella Vista</h1>
+                        <p class="text-muted-foreground text-sm">Order Management Dashboard</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2 bg-accent px-3 py-2 rounded-lg">
+                        <div class="w-2 h-2 bg-chart-2 rounded-full animate-pulse"></div>
+                        <span class="text-accent-foreground text-sm font-medium">Live Orders</span>
+                    </div>
+                    <button class="relative p-2 text-muted-foreground hover:text-foreground transition-colors">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">2</span>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-primary-foreground text-sm"></i>
+                        </div>
+                        <span class="text-foreground font-medium">Marco Rossi</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Order Management Content -->
+        <main class="p-6">
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-card border border-border rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-muted-foreground text-sm">Pending Orders</p>
+                            <p class="text-2xl font-bold text-foreground">7</p>
+                        </div>
+                        <i class="fas fa-clock text-chart-3 text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-card border border-border rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-muted-foreground text-sm">Accepted</p>
+                            <p class="text-2xl font-bold text-foreground">15</p>
+                        </div>
+                        <i class="fas fa-check text-chart-2 text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-card border border-border rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-muted-foreground text-sm">Completed</p>
+                            <p class="text-2xl font-bold text-foreground">42</p>
+                        </div>
+                        <i class="fas fa-check-double text-accent-foreground text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-card border border-border rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-muted-foreground text-sm">Revenue Today</p>
+                            <p class="text-2xl font-bold text-foreground">$1,247</p>
+                        </div>
+                        <i class="fas fa-dollar-sign text-chart-4 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Orders -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Pending Order Card -->
+                <div class="bg-card border border-border rounded-lg p-6 border-l-4 border-l-chart-3">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-chart-3/10 text-chart-3 px-2 py-1 rounded-full text-sm font-medium">Pending</span>
+                            <span class="text-muted-foreground text-sm">3 min ago</span>
+                        </div>
+                        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-bold">Table 7</span>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium text-foreground">Margherita Pizza</p>
+                                <p class="text-sm text-muted-foreground">Large, extra cheese</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-medium text-foreground">×2</p>
+                                <p class="text-sm text-muted-foreground">$24.00</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium text-foreground">Caesar Salad</p>
+                                <p class="text-sm text-muted-foreground">No croutons</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-medium text-foreground">×1</p>
+                                <p class="text-sm text-muted-foreground">$12.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-border pt-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-semibold text-foreground">Total</span>
+                            <span class="font-bold text-lg text-foreground">$36.00</span>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button class="flex-1 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg font-medium hover:bg-destructive/90 transition-colors">
+                                <i class="fas fa-times mr-2"></i>Reject
+                            </button>
+                            <button class="flex-1 bg-chart-2 text-white py-2 px-4 rounded-lg font-medium hover:bg-chart-2/90 transition-colors">
+                                <i class="fas fa-check mr-2"></i>Accept
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accepted Order Card -->
+                <div class="bg-card border border-border rounded-lg p-6 border-l-4 border-l-chart-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-chart-2/10 text-chart-2 px-2 py-1 rounded-full text-sm font-medium">Accepted</span>
+                            <span class="text-muted-foreground text-sm">8 min ago</span>
+                        </div>
+                        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-bold">Table 3</span>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium text-foreground">Chicken Parmigiana</p>
+                                <p class="text-sm text-muted-foreground">Well done</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-medium text-foreground">×1</p>
+                                <p class="text-sm text-muted-foreground">$22.00</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium text-foreground">Garlic Bread</p>
+                                <p class="text-sm text-muted-foreground">Extra garlic</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-medium text-foreground">×2</p>
+                                <p class="text-sm text-muted-foreground">$8.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-border pt-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-semibold text-foreground">Total</span>
+                            <span class="font-bold text-lg text-foreground">$30.00</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-muted-foreground">Est. Ready in 15 min</div>
+                            <button class="bg-primary text-primary-foreground py-2 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors">
+                                <i class="fas fa-check-double mr-2"></i>Mark Ready
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Another Pending Order -->
+                <div class="bg-card border border-border rounded-lg p-6 border-l-4 border-l-chart-3">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-chart-3/10 text-chart-3 px-2 py-1 rounded-full text-sm font-medium">Pending</span>
+                            <span class="text-muted-foreground text-sm">1 min ago</span>
+                        </div>
+                        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-bold">Table 12</span>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium text-foreground">Seafood Risotto</p>
+                                <p class="text-sm text-muted-foreground">No mushrooms</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-medium text-foreground">×1</p>
+                                <p class="text-sm text-muted-foreground">$28.00</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium text-foreground">Tiramisu</p>
+                                <p class="text-sm text-muted-foreground">-</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-medium text-foreground">×1</p>
+                                <p class="text-sm text-muted-foreground">$8.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-border pt-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-semibold text-foreground">Total</span>
+                            <span class="font-bold text-lg text-foreground">$36.00</span>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button class="flex-1 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg font-medium hover:bg-destructive/90 transition-colors">
+                                <i class="fas fa-times mr-2"></i>Reject
+                            </button>
+                            <button class="flex-1 bg-chart-2 text-white py-2 px-4 rounded-lg font-medium hover:bg-chart-2/90 transition-colors">
+                                <i class="fas fa-check mr-2"></i>Accept
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- @END_COMPONENT: RestaurantOwnerPanel -->
+
+    <!-- @COMPONENT: CustomerARMenu -->
+    <div id="customerView" class="view-panel min-h-screen hidden bg-background">
+        <!-- Mobile Header -->
+        <header class="bg-card/80 navbar-blur border-b border-border px-4 py-3 sticky top-0 z-40">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <!-- Restaurant logo for customer view -->
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40" alt="Bella Vista restaurant logo" class="w-10 h-10 rounded-lg object-cover" />
+                    <div>
+                        <h1 class="text-lg font-bold text-foreground font-serif">Bella Vista</h1>
+                        <p class="text-muted-foreground text-sm">AR Menu Experience</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="p-2 text-muted-foreground hover:text-foreground transition-colors">
+                        <i class="fas fa-shopping-cart text-lg"></i>
+                    </button>
+                    <div class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                        Table 7
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- AR Dish Viewer -->
+        <div class="relative h-96 bg-gradient-to-br from-primary/10 to-accent/10">
+            <!-- 3D Model Viewer Placeholder -->
+            <div class="ar-viewer-placeholder h-full w-full flex items-center justify-center relative overflow-hidden">
+                <!-- CUSTOM AR VIEWER: model-viewer component for GLB/USDZ models -->
+                <div class="text-center text-white z-10">
+                    <div class="w-32 h-32 mx-auto mb-4 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur">
+                        <i class="fas fa-cube text-4xl text-white/80"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Margherita Pizza</h3>
+                    <p class="text-white/80 mb-4">View in AR to see this dish in 3D</p>
+                    <button class="bg-white/20 backdrop-blur text-white px-6 py-3 rounded-xl font-medium hover:bg-white/30 transition-colors">
+                        <i class="fas fa-expand-arrows-alt mr-2"></i>Enter AR Mode
+                    </button>
+                </div>
+                
+                <!-- AR Mode Toggle Button -->
+                <button class="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white p-3 rounded-full hover:bg-white/30 transition-colors">
+                    <i class="fas fa-camera text-lg"></i>
+                </button>
+
+                <!-- 3D Controls -->
+                <div class="absolute bottom-4 left-4 right-4 flex justify-center space-x-4">
+                    <button class="bg-white/20 backdrop-blur text-white p-2 rounded-lg hover:bg-white/30 transition-colors">
+                        <i class="fas fa-rotate text-sm"></i>
+                    </button>
+                    <button class="bg-white/20 backdrop-blur text-white p-2 rounded-lg hover:bg-white/30 transition-colors">
+                        <i class="fas fa-search-plus text-sm"></i>
+                    </button>
+                    <button class="bg-white/20 backdrop-blur text-white p-2 rounded-lg hover:bg-white/30 transition-colors">
+                        <i class="fas fa-search-minus text-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dish Navigation -->
+        <div class="px-4 py-4 bg-card border-b border-border">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-foreground">Menu Items</h2>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-muted-foreground">2 of 12</span>
+                    <div class="flex space-x-1">
+                        <button class="w-2 h-2 bg-primary rounded-full"></button>
+                        <button class="w-2 h-2 bg-muted rounded-full"></button>
+                        <button class="w-2 h-2 bg-muted rounded-full"></button>
+                        <button class="w-2 h-2 bg-muted rounded-full"></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dish Slider -->
+            <div class="flex space-x-4 overflow-x-auto pb-2">
+                <div class="flex-shrink-0 w-24 text-center">
+                    <!-- Pizza dish showcase image -->
+                    <img src="https://pixabay.com/get/g2836956f223d6d9c08d31b5d7d1555e270eccc9fd5c8e481fe14b19ec6bbeb3f1f649c07d079ec3622e0093138e7fea775d113579516b4f04c794bda452e70ad_1280.jpg" alt="Fresh Margherita pizza with basil and mozzarella" class="w-20 h-16 rounded-lg object-cover mx-auto border-2 border-primary" />
+                    <p class="text-xs text-foreground mt-1 font-medium">Margherita</p>
+                </div>
+                <div class="flex-shrink-0 w-24 text-center">
+                    <!-- Pasta dish image -->
+                    <img src="https://pixabay.com/get/gef1240c2cf47634d16014ce3616951b5df17e9a59f0648f1facd965f910f6a1d9905196dbcd124280c1ddf5dea89b637662cb176d82af25d50426070375fa9d6_1280.jpg" alt="Creamy carbonara pasta with pancetta and parmesan" class="w-20 h-16 rounded-lg object-cover mx-auto border border-border" />
+                    <p class="text-xs text-muted-foreground mt-1">Carbonara</p>
+                </div>
+                <div class="flex-shrink-0 w-24 text-center">
+                    <!-- Salad dish image -->
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=150" alt="Fresh Caesar salad with crispy croutons and parmesan" class="w-20 h-16 rounded-lg object-cover mx-auto border border-border" />
+                    <p class="text-xs text-muted-foreground mt-1">Caesar Salad</p>
+                </div>
+                <div class="flex-shrink-0 w-24 text-center">
+                    <!-- Risotto dish image -->
+                    <img src="https://images.unsplash.com/photo-1476124369491-e7addf5db371?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=150" alt="Creamy seafood risotto with mixed seafood and herbs" class="w-20 h-16 rounded-lg object-cover mx-auto border border-border" />
+                    <p class="text-xs text-muted-foreground mt-1">Seafood Risotto</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dish Details -->
+        <div class="p-6">
+            <div class="bg-card border border-border rounded-xl p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-foreground font-serif">Margherita Pizza</h2>
+                        <p class="text-muted-foreground mt-1">Classic Italian pizza with fresh mozzarella, tomato sauce, and basil</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-primary">$18.00</p>
+                        <p class="text-sm text-muted-foreground">Large</p>
+                    </div>
+                </div>
+
+                <!-- Ingredients -->
+                <div class="mb-6">
+                    <h3 class="font-semibold text-foreground mb-2">Ingredients</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-muted text-muted-foreground px-3 py-1 rounded-full text-sm">Fresh Mozzarella</span>
+                        <span class="bg-muted text-muted-foreground px-3 py-1 rounded-full text-sm">Tomato Sauce</span>
+                        <span class="bg-muted text-muted-foreground px-3 py-1 rounded-full text-sm">Fresh Basil</span>
+                        <span class="bg-muted text-muted-foreground px-3 py-1 rounded-full text-sm">Extra Virgin Olive Oil</span>
+                    </div>
+                </div>
+
+                <!-- Customization Options -->
+                <div class="mb-6">
+                    <h3 class="font-semibold text-foreground mb-3">Customize Your Order</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-foreground">Size</label>
+                            <select class="bg-input border border-border rounded-lg px-3 py-2 text-foreground">
+                                <option>Small (+$0)</option>
+                                <option selected>Large (+$0)</option>
+                                <option>Family (+$8)</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-foreground">Extra Cheese</label>
+                            <input type="checkbox" class="w-5 h-5 text-primary bg-input border-border rounded focus:ring-primary" />
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-foreground">Quantity</label>
+                            <div class="flex items-center space-x-3">
+                                <button class="w-8 h-8 bg-muted text-muted-foreground rounded-lg flex items-center justify-center hover:bg-border transition-colors">
+                                    <i class="fas fa-minus text-sm"></i>
+                                </button>
+                                <span class="text-foreground font-medium w-8 text-center">1</span>
+                                <button class="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center hover:bg-primary/90 transition-colors">
+                                    <i class="fas fa-plus text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Instructions -->
+                <div class="mb-6">
+                    <label class="block text-foreground font-semibold mb-2">Special Instructions</label>
+                    <textarea class="w-full bg-input border border-border rounded-lg px-3 py-2 text-foreground resize-none" rows="3" placeholder="Any special requests for your order..."></textarea>
+                </div>
+
+                <!-- Add to Order Button -->
+                <button class="w-full bg-primary text-primary-foreground py-4 rounded-xl font-semibold text-lg hover:bg-primary/90 transition-colors flex items-center justify-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add to Order - $18.00
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="fixed bottom-0 left-0 right-0 bg-card/80 navbar-blur border-t border-border p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>Previous</span>
+                    </button>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-muted-foreground">Swipe or use arrows to browse</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="flex items-center space-x-2 text-primary hover:text-primary/80 transition-colors">
+                        <span>Next</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: CustomerARMenu -->
+
+    <script>
+        // View Switching Logic
+        (function() {
+            const viewSelector = document.getElementById('viewSelector');
+            const views = {
+                admin: document.getElementById('adminView'),
+                owner: document.getElementById('ownerView'),
+                customer: document.getElementById('customerView')
+            };
+
+            function showView(viewName) {
+                // Hide all views
+                Object.values(views).forEach(view => {
+                    view.classList.add('hidden');
+                });
+                
+                // Show selected view
+                if (views[viewName]) {
+                    views[viewName].classList.remove('hidden');
+                }
+            }
+
+            viewSelector.addEventListener('change', (e) => {
+                showView(e.target.value);
+            });
+
+            // Initialize with admin view
+            showView('admin');
+
+            // TODO: Implement real-time Socket.IO connection for order updates
+            // TODO: Implement AR model viewer integration with model-viewer
+            // TODO: Implement Three.js fallback for devices without AR support
+            // TODO: Implement form submission and validation logic
+            // TODO: Implement JWT authentication flow
+            // TODO: Implement QR code generation and scanning
+        })();
+    </script>
+</body>
+</html>

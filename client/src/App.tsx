@@ -18,6 +18,7 @@ function Router() {
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/owner" component={OwnerLogin} />
       <Route path="/owner/dashboard" component={OwnerDashboard} />
+      <Route path="/menu/:restaurantId" element={<MenuPage />} />
       <Route path="/menu/:restaurantId" component={CustomerMenu} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />

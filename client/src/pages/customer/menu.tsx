@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import ARViewer from "@/components/ar-viewer";
 import ThreeFallback from "@/components/three-fallback";
+import { supabase } from "@/lib/supabaseClient";
 import { 
   ShoppingCart, 
   Plus, 
