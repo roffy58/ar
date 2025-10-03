@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "postbuild": "cp public/_redirects dist/ || true"
+    "homepage": "https://roffy58.github.io/ar"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.1",
